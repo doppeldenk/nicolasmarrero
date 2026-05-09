@@ -1,0 +1,21 @@
+---
+import { PortableText as AstroPortableText } from 'astro-portabletext'
+import PortableTextImage from './PortableTextImage.astro'
+
+interface Props {
+  value: any[]
+  class?: string
+}
+
+const { value, class: className } = Astro.props
+
+const components = {
+  type: {
+    image: PortableTextImage,
+  },
+}
+---
+
+<div class={className}>
+  <AstroPortableText value={value} components={components} />
+</div>

@@ -1,57 +1,16 @@
-(function () {
-    const root = document.documentElement;
-
-    function getStoredTheme() {
-        try {
-            return localStorage.getItem('theme');
-        } catch {
-            return null;
-        }
+function setTheme(mode) {
+    if (mode === 'dark') {
+        document.documentElement.classList.add('dark');
+        localStorage.theme = 'dark';
+    } else {
+        document.documentElement.classList.remove('dark');
+        localStorage.theme = 'light';
     }
+}
 
-    function storeTheme(theme) {
-        try {
-            localStorage.setItem('theme', theme);
-        } catch {}
-    }
+function handleThemeToggle() {
+    const currentTheme = localStorage.theme === 'dark' ? 'dark' : 'light';
+    setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+}
 
-    function getSystemTheme() {
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            return 'dark';
-        }
-        return 'light';
-    }
-
-    function getActiveTheme() {
-        const stored = getStoredTheme();
-        return stored || getSystemTheme();
-    }
-
-    function applyTheme(theme) {
-        const isDark = theme === 'dark';
-        root.classList.toggle('dark', isDark);
-    }
-
-    function setupThemeToggle() {
-        const button = document.getElementById('theme-toggle');
-        if (!button) return;
-
-        button.onclick = () => {
-            const isDark = root.classList.toggle('dark');
-            const theme = isDark ? 'dark' : 'light';
-            storeTheme(theme);
-        };
-    }
-
-    // Set initial theme
-    applyTheme(getActiveTheme());
-
-    // Attach toggle listener on first load
-    document.addEventListener('astro:page-load', setupThemeToggle);
-
-    // Re-apply theme after navigation
-    document.addEventListener('astro:after-swap', () => {
-        applyTheme(getActiveTheme());
-        setupThemeToggle();
-    });
-})();
+window.handleThemeToggle = handleThemeToggle;

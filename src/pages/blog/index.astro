@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogPostPreview from '../../components/BlogPostPreview.astro';
+import { getPosts } from '../../lib/sanity';
+
+const posts = await getPosts();
+---
+
+<BaseLayout title="Blog" description="Artículos y reflexiones" showHeader={false}>
+    <h1 class="mb-12 font-serif text-2xl leading-tight italic sm:mb-16 sm:text-4xl">Blog</h1>
+
+    {posts.length > 0 ? (
+        <div class="space-y-10 sm:space-y-12">
+            {posts.map((post) => (
+                <BlogPostPreview post={post} />
+            ))}
+        </div>
+    ) : (
+        <p class="text-center opacity-70">No hay entradas de blog disponibles.</p>
+    )}
+</BaseLayout>

@@ -15,7 +15,12 @@ pnpm-debug.log*
 
 # environment variables
 .env
+.env.local
 .env.production
+
+# Sanity
+sanity/dist/
+sanity/.sanity/
 
 # macOS-specific files
 .DS_Store

@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Button from '../../components/Button.astro';
+import { getPublicaciones, getPublicacionBySlug, urlFor } from '../../lib/sanity';
+
+export async function getStaticPaths() {
+    const publicaciones = await getPublicaciones();
+    return publicaciones.map((pub) => ({
+        params: { slug: pub.slug },
+        props: { pub }
+    }));
+}
+
+const { pub } = Astro.props;
+
+const tipoLabels: Record<string, string> = {
+    libro: 'Libro',
+    articulo: 'Artículo',
+    charla: 'Charla',
+    otro: 'Otro'
+};
+---
+
+<BaseLayout title={pub.title} description={pub.description || `${pub.title} (${pub.year})`} showHeader={false}>
+    <article class="mb-16 sm:mb-24">
+        <header class="mb-8">
+            <p class="text-sm uppercase tracking-wide opacity-70 mb-2">
+                {tipoLabels[pub.type]} · {pub.year}
+            </p>
+            <h1 class="font-serif text-3xl leading-tight font-medium sm:text-5xl sm:leading-tight">
+                {pub.title}
+            </h1>
+        </header>
+
+        {pub.coverImage && (
+            <figure class="mb-8">
+                <img
+                    src={urlFor(pub.coverImage).width(600).auto('format').url()}
+                    alt=""
+                    class="max-w-sm rounded"
+                    loading="eager"
+                />
+            </figure>
+        )}
+
+        {pub.description && (
+            <div class="prose sm:prose-lg max-w-none mb-8">
+                <p>{pub.description}</p>
+            </div>
+        )}
+
+        <div class="flex flex-wrap gap-4">
+            {pub.url && (
+                <Button href={pub.url} target="_blank" rel="noopener noreferrer">
+                    Ver publicación
+                </Button>
+            )}
+            <Button href="/publicaciones">
+                Volver a publicaciones
+            </Button>
+        </div>
+    </article>
+</BaseLayout>
