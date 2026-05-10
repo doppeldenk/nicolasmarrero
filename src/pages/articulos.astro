@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getArticulos } from '../lib/sanity';
+
+const articulos = await getArticulos();
+---
+
+<BaseLayout title="Artículos Académicos" description="Artículos en revistas científicas" showHeader={false}>
+    <h1 class="mb-12 font-serif text-2xl leading-tight italic sm:mb-16 sm:text-4xl">Artículos Académicos</h1>
+
+    {articulos.length > 0 ? (
+        <ul class="space-y-6">
+            {articulos.map((pub) => (
+                <li class="group">
+                    <a
+                        href={pub.url || `/publicaciones/${pub.slug}`}
+                        target={pub.url ? "_blank" : undefined}
+                        rel={pub.url ? "noopener noreferrer" : undefined}
+                        class="flex items-start gap-4"
+                    >
+                        <div class="grow">
+                            <h3 class="font-serif text-lg leading-tight font-medium group-hover:underline group-hover:decoration-dashed group-hover:decoration-1 group-hover:underline-offset-4 sm:text-xl">
+                                {pub.title}
+                            </h3>
+                            <p class="mt-1 text-sm opacity-70">{pub.year}</p>
+                            {pub.description && (
+                                <p class="mt-2 text-sm leading-relaxed">{pub.description}</p>
+                            )}
+                        </div>
+                    </a>
+                </li>
+            ))}
+        </ul>
+    ) : (
+        <p class="text-center opacity-70">No hay artículos disponibles.</p>
+    )}
+</BaseLayout>

@@ -23,8 +23,14 @@ const structure = (S: any) =>
             .title('Inicio')
         ),
       S.divider(),
-      // Publicaciones collection
-      S.documentTypeListItem('publicacion').title('Publicaciones'),
+      // Publicaciones
+      S.documentTypeListItem('entrevista').title('Entrevistas'),
+      S.documentTypeListItem('libro').title('Libros'),
+      S.documentTypeListItem('articulo').title('Artículos Académicos'),
+      S.documentTypeListItem('conferencia').title('Conferencias'),
+      S.documentTypeListItem('charla').title('Charlas'),
+      S.documentTypeListItem('prensa').title('Prensa'),
+      S.divider(),
       // Blog collection
       S.documentTypeListItem('post').title('Blog'),
       S.divider(),

@@ -1,11 +1,24 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Button from '../../components/Button.astro';
-import { getPublicaciones, getPublicacionBySlug, urlFor } from '../../lib/sanity';
+import { getLibros, getArticulos, getConferencias, getCharlas, urlFor } from '../../lib/sanity';
 
 export async function getStaticPaths() {
-    const publicaciones = await getPublicaciones();
-    return publicaciones.map((pub) => ({
+    const [libros, articulos, conferencias, charlas] = await Promise.all([
+        getLibros(),
+        getArticulos(),
+        getConferencias(),
+        getCharlas(),
+    ]);
+
+    const allPublications = [
+        ...libros.map((item) => ({ ...item, type: 'libro' as const })),
+        ...articulos.map((item) => ({ ...item, type: 'articulo' as const })),
+        ...conferencias.map((item) => ({ ...item, type: 'conferencia' as const })),
+        ...charlas.map((item) => ({ ...item, type: 'charla' as const })),
+    ];
+
+    return allPublications.map((pub) => ({
         params: { slug: pub.slug },
         props: { pub }
     }));
@@ -16,8 +29,8 @@ const { pub } = Astro.props;
 const tipoLabels: Record<string, string> = {
     libro: 'Libro',
     articulo: 'Artículo',
-    charla: 'Charla',
-    otro: 'Otro'
+    conferencia: 'Conferencia',
+    charla: 'Charla'
 };
 ---
 
@@ -32,7 +45,7 @@ const tipoLabels: Record<string, string> = {
             </h1>
         </header>
 
-        {pub.coverImage && (
+        {'coverImage' in pub && pub.coverImage && (
             <figure class="mb-8">
                 <img
                     src={urlFor(pub.coverImage).width(600).auto('format').url()}
@@ -55,8 +68,8 @@ const tipoLabels: Record<string, string> = {
                     Ver publicación
                 </Button>
             )}
-            <Button href="/publicaciones">
-                Volver a publicaciones
+            <Button href={`/${pub.type}s`}>
+                Volver a {tipoLabels[pub.type].toLowerCase()}s
             </Button>
         </div>
     </article>

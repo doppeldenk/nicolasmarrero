@@ -15,24 +15,35 @@ const siteConfig: SiteConfig = {
             href: '/'
         },
         {
-            text: 'Publicaciones',
-            href: '/publicaciones'
+            text: 'Entrevistas',
+            href: '/entrevistas'
         },
         {
-            text: 'Blog',
-            href: '/blog'
+            text: 'Prensa',
+            href: '/prensa'
+        },
+        {
+            text: 'Artículos Académicos',
+            href: '/articulos'
+        },
+        {
+            text: 'Libros',
+            href: '/libros'
+        },
+        {
+            text: 'Conferencias',
+            href: '/conferencias'
+        },
+        {
+            text: 'Charlas',
+            href: '/charlas'
         },
         {
             text: 'Contacto',
             href: '/contacto'
         }
     ],
-    footerNavLinks: [
-        {
-            text: 'Contacto',
-            href: '/contacto'
-        }
-    ],
+    footerNavLinks: [],
     socialLinks: [],
     postsPerPage: 10,
     projectsPerPage: 10

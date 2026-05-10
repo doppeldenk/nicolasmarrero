@@ -31,15 +31,60 @@ export interface Inicio {
   }
 }
 
-export interface Publicacion {
+export interface Libro {
   _id: string
   title: string
   year: number
-  type: 'libro' | 'articulo' | 'charla' | 'otro'
   description?: string
   coverImage?: SanityImageSource
   url?: string
-  slug: string // Generated from title + year
+  slug: string
+}
+
+export interface Articulo {
+  _id: string
+  title: string
+  year: number
+  description?: string
+  url?: string
+  slug: string
+}
+
+export interface Conferencia {
+  _id: string
+  title: string
+  year: number
+  description?: string
+  url?: string
+  slug: string
+}
+
+export interface Charla {
+  _id: string
+  title: string
+  year: number
+  description?: string
+  url?: string
+  slug: string
+}
+
+export interface Prensa {
+  _id: string
+  title: string
+  year: number
+  description?: string
+  coverImage?: SanityImageSource
+  externalImageUrl?: string
+  url?: string
+  slug: string
+}
+
+export interface Entrevista {
+  _id: string
+  title: string
+  url: string
+  date?: string
+  videoId: string
 }
 
 export interface Post {
@@ -80,28 +125,126 @@ export async function getInicio(): Promise<Inicio | null> {
   return client.fetch(`*[_id == "inicio"][0]{ title, bio, photo }`)
 }
 
-export async function getPublicaciones(): Promise<Publicacion[]> {
+export async function getLibros(): Promise<Libro[]> {
   const results = await client.fetch(`
-    *[_type == "publicacion"] | order(year desc) {
+    *[_type == "libro"] | order(year desc) {
       _id,
       title,
       year,
-      type,
       description,
       coverImage,
       url
     }
   `)
-  // Add generated slugs
-  return results.map((pub: any) => ({
-    ...pub,
-    slug: generateSlug(pub.title, pub.year),
+  return results.map((item: any) => ({
+    ...item,
+    slug: generateSlug(item.title, item.year),
   }))
 }
 
-export async function getPublicacionBySlug(slug: string): Promise<Publicacion | null> {
-  const publicaciones = await getPublicaciones()
-  return publicaciones.find((p) => p.slug === slug) || null
+export async function getArticulos(): Promise<Articulo[]> {
+  const results = await client.fetch(`
+    *[_type == "articulo"] | order(year desc) {
+      _id,
+      title,
+      year,
+      description,
+      url
+    }
+  `)
+  return results.map((item: any) => ({
+    ...item,
+    slug: generateSlug(item.title, item.year),
+  }))
+}
+
+export async function getConferencias(): Promise<Conferencia[]> {
+  const results = await client.fetch(`
+    *[_type == "conferencia"] | order(year desc) {
+      _id,
+      title,
+      year,
+      description,
+      url
+    }
+  `)
+  return results.map((item: any) => ({
+    ...item,
+    slug: generateSlug(item.title, item.year),
+  }))
+}
+
+export async function getCharlas(): Promise<Charla[]> {
+  const results = await client.fetch(`
+    *[_type == "charla"] | order(year desc) {
+      _id,
+      title,
+      year,
+      description,
+      url
+    }
+  `)
+  return results.map((item: any) => ({
+    ...item,
+    slug: generateSlug(item.title, item.year),
+  }))
+}
+
+export async function getPrensa(): Promise<Prensa[]> {
+  const results = await client.fetch(`
+    *[_type == "prensa"] | order(year desc) {
+      _id,
+      title,
+      year,
+      description,
+      coverImage,
+      externalImageUrl,
+      url
+    }
+  `)
+  return results.map((item: any) => ({
+    ...item,
+    slug: generateSlug(item.title, item.year),
+  }))
+}
+
+function extractYouTubeId(url: string): string {
+  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/)
+  return match ? match[1] : ''
+}
+
+export async function getEntrevistas(): Promise<Entrevista[]> {
+  const results = await client.fetch(`
+    *[_type == "entrevista"] | order(date desc) {
+      _id,
+      title,
+      url,
+      date
+    }
+  `)
+  return results.map((item: any) => ({
+    ...item,
+    videoId: extractYouTubeId(item.url),
+  }))
+}
+
+export async function getPublicacionBySlug(slug: string): Promise<(Libro | Articulo | Conferencia | Charla) | null> {
+  // Search across all publication types
+  const [libros, articulos, conferencias, charlas] = await Promise.all([
+    getLibros(),
+    getArticulos(),
+    getConferencias(),
+    getCharlas(),
+  ])
+
+  const allPublications = [
+    ...libros.map((item) => ({ ...item, type: 'libro' as const })),
+    ...articulos.map((item) => ({ ...item, type: 'articulo' as const })),
+    ...conferencias.map((item) => ({ ...item, type: 'conferencia' as const })),
+    ...charlas.map((item) => ({ ...item, type: 'charla' as const })),
+  ]
+
+  return allPublications.find((p) => p.slug === slug) || null
 }
 
 export async function getPosts(): Promise<Post[]> {

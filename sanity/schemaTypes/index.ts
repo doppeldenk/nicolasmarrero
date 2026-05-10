@@ -1,6 +1,11 @@
 import inicio from './inicio'
-import publicacion from './publicacion'
+import libro from './libro'
+import articulo from './articulo'
+import conferencia from './conferencia'
+import charla from './charla'
+import prensa from './prensa'
+import entrevista from './entrevista'
 import post from './post'
 import contacto from './contacto'
 
-export const schemaTypes = [inicio, publicacion, post, contacto]
+export const schemaTypes = [inicio, libro, articulo, conferencia, charla, prensa, entrevista, post, contacto]

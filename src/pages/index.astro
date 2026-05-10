@@ -1,33 +1,97 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PortableText from '../components/PortableText.astro';
-import { getInicio, urlFor } from '../lib/sanity';
+import { getInicio, getEntrevistas, getPrensa, urlFor } from '../lib/sanity';
 import siteConfig from '../data/site-config';
 
 const inicio = await getInicio();
+const entrevistas = await getEntrevistas();
+const prensa = await getPrensa();
+const latestVideos = entrevistas.slice(0, 3);
+const latestPrensa = prensa.slice(0, 3);
 ---
 
 <BaseLayout description={siteConfig.description} showHeader={false}>
-    <section class="mb-16 flex w-full flex-col gap-8 sm:mb-24">
+    <section class="mb-16 sm:mb-24">
         {inicio?.title && (
-            <h1 class="font-serif text-3xl leading-tight font-medium sm:text-5xl sm:leading-tight">
+            <h1 class="mb-8 font-serif text-3xl leading-tight font-medium sm:text-5xl sm:leading-tight">
                 {inicio.title}
             </h1>
         )}
-        {inicio?.photo?.asset && (
-            <figure>
-                <img
-                    class="w-full max-w-md rounded"
-                    src={urlFor(inicio.photo).width(600).auto('format').url()}
-                    alt="Foto de perfil"
-                    width="600"
-                    height="600"
-                    loading="eager"
-                />
-            </figure>
-        )}
-        {inicio?.bio && (
-            <PortableText value={inicio.bio} class="prose sm:prose-lg max-w-none" />
-        )}
+        <div>
+            {inicio?.photo?.asset && (
+                <figure class="sm:float-left sm:mr-6 mb-4">
+                    <img
+                        class="w-full sm:max-w-[14rem] rounded"
+                        src={urlFor(inicio.photo).width(600).auto('format').url()}
+                        alt="Foto de perfil"
+                        width="600"
+                        height="600"
+                        loading="eager"
+                    />
+                </figure>
+            )}
+            {inicio?.bio && (
+                <PortableText value={inicio.bio} class="prose sm:prose-lg max-w-none text-justify" />
+            )}
+        </div>
+    </section>
+
+    <section>
+        <div class="flex items-center justify-between mb-8">
+            <h2 class="font-serif text-xl italic sm:text-2xl">Entrevistas recientes</h2>
+            <a href="/entrevistas" class="text-sm hover:underline">Ver todas →</a>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {latestVideos.map((video) => (
+                <a
+                    href={video.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="group block"
+                >
+                    <div class="relative aspect-video rounded-lg overflow-hidden bg-gray-100">
+                        <img
+                            src={`https://i.ytimg.com/vi/${video.videoId}/hqdefault.jpg`}
+                            alt=""
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            loading="lazy"
+                        />
+                        <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20">
+                            <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center">
+                                <svg class="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="mt-3 text-sm font-medium leading-snug group-hover:underline group-hover:decoration-dashed group-hover:underline-offset-4">
+                        {video.title}
+                    </h3>
+                </a>
+            ))}
+        </div>
+    </section>
+
+    <section class="mt-16 sm:mt-24">
+        <div class="flex items-center justify-between mb-8">
+            <h2 class="font-serif text-xl italic sm:text-2xl">Artículos de prensa recientes</h2>
+            <a href="/prensa" class="text-sm hover:underline">Ver todos →</a>
+        </div>
+        <ul class="space-y-4">
+            {latestPrensa.map((item) => (
+                <li>
+                    <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="group block hover:underline hover:decoration-dashed hover:underline-offset-4"
+                    >
+                        <span class="font-medium">{item.title}</span>
+                        <span class="text-sm opacity-70 ml-2">({item.year})</span>
+                    </a>
+                </li>
+            ))}
+        </ul>
     </section>
 </BaseLayout>

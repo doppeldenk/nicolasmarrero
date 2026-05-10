@@ -1,8 +1,8 @@
 import { defineField, defineType } from 'sanity'
 
 export default defineType({
-  name: 'publicacion',
-  title: 'Publicaciones',
+  name: 'libro',
+  title: 'Libros',
   type: 'document',
   fields: [
     defineField({
@@ -18,32 +18,16 @@ export default defineType({
       validation: (rule) => rule.required().min(1900).max(2100),
     }),
     defineField({
-      name: 'type',
-      title: 'Tipo',
-      type: 'string',
-      options: {
-        list: [
-          { title: 'Libro', value: 'libro' },
-          { title: 'Artículo', value: 'articulo' },
-          { title: 'Charla', value: 'charla' },
-          { title: 'Otro', value: 'otro' },
-        ],
-        layout: 'radio',
-      },
-      validation: (rule) => rule.required(),
-    }),
-    defineField({
       name: 'description',
       title: 'Descripción',
       type: 'text',
-      description: '1–3 frases describiendo la publicación',
+      description: '1–3 frases describiendo el libro',
       rows: 3,
     }),
     defineField({
       name: 'coverImage',
       title: 'Imagen de portada',
       type: 'image',
-      description: 'Útil sobre todo para libros',
       options: {
         hotspot: true,
       },
@@ -52,7 +36,7 @@ export default defineType({
       name: 'url',
       title: 'Enlace',
       type: 'url',
-      description: 'Link al publisher, DOI, video de la charla, etc.',
+      description: 'Link a Academia.edu, publisher, etc.',
     }),
   ],
   orderings: [
@@ -66,19 +50,12 @@ export default defineType({
     select: {
       title: 'title',
       year: 'year',
-      type: 'type',
       media: 'coverImage',
     },
-    prepare({ title, year, type, media }) {
-      const typeLabels: Record<string, string> = {
-        libro: 'Libro',
-        articulo: 'Artículo',
-        charla: 'Charla',
-        otro: 'Otro',
-      }
+    prepare({ title, year, media }) {
       return {
         title,
-        subtitle: `${year} · ${typeLabels[type] || type}`,
+        subtitle: `${year}`,
         media,
       }
     },
