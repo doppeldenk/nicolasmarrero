@@ -22,6 +22,15 @@ export default defineType({
       title: 'Fecha',
       type: 'date',
     }),
+    defineField({
+      name: 'coverImage',
+      title: 'Imagen de portada',
+      type: 'image',
+      description: 'Opcional. Si no se sube, se usa la miniatura de YouTube.',
+      options: {
+        hotspot: true,
+      },
+    }),
   ],
   orderings: [
     {
@@ -34,11 +43,13 @@ export default defineType({
     select: {
       title: 'title',
       date: 'date',
+      media: 'coverImage',
     },
-    prepare({ title, date }) {
+    prepare({ title, date, media }) {
       return {
         title,
         subtitle: date,
+        media,
       }
     },
   },

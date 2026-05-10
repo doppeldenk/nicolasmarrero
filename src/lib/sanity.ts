@@ -85,6 +85,7 @@ export interface Entrevista {
   url: string
   date?: string
   videoId: string
+  coverImage?: SanityImageSource
 }
 
 export interface Post {
@@ -215,11 +216,12 @@ function extractYouTubeId(url: string): string {
 
 export async function getEntrevistas(): Promise<Entrevista[]> {
   const results = await client.fetch(`
-    *[_type == "entrevista"] | order(date desc) {
+    *[_type == "entrevista"] | order(_createdAt desc) {
       _id,
       title,
       url,
-      date
+      date,
+      coverImage
     }
   `)
   return results.map((item: any) => ({

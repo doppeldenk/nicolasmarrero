@@ -119,7 +119,9 @@ const latestPrensa = prensa.slice(0, 3);
                 >
                     <div class="relative aspect-video rounded-lg overflow-hidden bg-gray-100">
                         <img
-                            src={`https://i.ytimg.com/vi/${video.videoId}/hqdefault.jpg`}
+                            src={video.coverImage
+                                ? urlFor(video.coverImage).width(400).height(225).auto('format').url()
+                                : `https://i.ytimg.com/vi/${video.videoId}/hqdefault.jpg`}
                             alt=""
                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                             loading="lazy"

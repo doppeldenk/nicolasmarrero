@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getEntrevistas } from '../lib/sanity';
+import { getEntrevistas, urlFor } from '../lib/sanity';
 
 const entrevistas = await getEntrevistas();
 ---
@@ -19,7 +19,9 @@ const entrevistas = await getEntrevistas();
                 >
                     <div class="relative aspect-video rounded-lg overflow-hidden bg-gray-100">
                         <img
-                            src={`https://i.ytimg.com/vi/${video.videoId}/hqdefault.jpg`}
+                            src={video.coverImage
+                                ? urlFor(video.coverImage).width(480).height(270).auto('format').url()
+                                : `https://i.ytimg.com/vi/${video.videoId}/hqdefault.jpg`}
                             alt=""
                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                             loading="lazy"
