@@ -9,36 +9,34 @@ const libros = await getLibros();
     <h1 class="mb-12 font-serif text-2xl leading-tight italic sm:mb-16 sm:text-4xl">Libros</h1>
 
     {libros.length > 0 ? (
-        <ul class="space-y-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {libros.map((pub) => (
-                <li class="group">
-                    <a
-                        href={pub.url || `/publicaciones/${pub.slug}`}
-                        target={pub.url ? "_blank" : undefined}
-                        rel={pub.url ? "noopener noreferrer" : undefined}
-                        class="flex items-start gap-4"
-                    >
-                        {pub.coverImage && (
+                <a
+                    href={pub.url || `/publicaciones/${pub.slug}`}
+                    target={pub.url ? "_blank" : undefined}
+                    rel={pub.url ? "noopener noreferrer" : undefined}
+                    class="group block"
+                >
+                    {pub.coverImage && (
+                        <div class="aspect-[2/3] rounded-lg overflow-hidden bg-gray-100 mb-4">
                             <img
-                                src={urlFor(pub.coverImage).width(80).height(120).auto('format').url()}
+                                src={urlFor(pub.coverImage).width(400).height(600).auto('format').url()}
                                 alt=""
-                                class="w-16 h-24 object-cover rounded shrink-0"
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                 loading="lazy"
                             />
-                        )}
-                        <div class="grow">
-                            <h3 class="font-serif text-lg leading-tight font-medium group-hover:underline group-hover:decoration-dashed group-hover:decoration-1 group-hover:underline-offset-4 sm:text-xl">
-                                {pub.title}
-                            </h3>
-                            <p class="mt-1 text-sm opacity-70">{pub.year}</p>
-                            {pub.description && (
-                                <p class="mt-2 text-sm leading-relaxed">{pub.description}</p>
-                            )}
                         </div>
-                    </a>
-                </li>
+                    )}
+                    <h3 class="font-serif text-lg leading-tight font-medium group-hover:underline group-hover:decoration-dashed group-hover:decoration-1 group-hover:underline-offset-4">
+                        {pub.title}
+                    </h3>
+                    <p class="mt-1 text-sm opacity-70">{pub.year}</p>
+                    {pub.description && (
+                        <p class="mt-2 text-sm leading-relaxed">{pub.description}</p>
+                    )}
+                </a>
             ))}
-        </ul>
+        </div>
     ) : (
         <p class="text-center opacity-70">No hay libros disponibles.</p>
     )}

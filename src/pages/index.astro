@@ -1,12 +1,14 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PortableText from '../components/PortableText.astro';
-import { getInicio, getEntrevistas, getPrensa, urlFor } from '../lib/sanity';
+import { getInicio, getLibros, getEntrevistas, getPrensa, urlFor } from '../lib/sanity';
 import siteConfig from '../data/site-config';
 
 const inicio = await getInicio();
+const libros = await getLibros();
 const entrevistas = await getEntrevistas();
 const prensa = await getPrensa();
+const latestLibros = libros.slice(0, 3);
 const latestVideos = entrevistas.slice(0, 3);
 const latestPrensa = prensa.slice(0, 3);
 ---
@@ -38,6 +40,71 @@ const latestPrensa = prensa.slice(0, 3);
     </section>
 
     <section>
+        <div class="flex items-center justify-between mb-8">
+            <h2 class="font-serif text-xl italic sm:text-2xl">Libros destacados</h2>
+            <a href="/libros" class="text-sm hover:underline">Ver todos →</a>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {latestLibros.map((libro) => (
+                <a
+                    href={libro.url || `/publicaciones/${libro.slug}`}
+                    target={libro.url ? "_blank" : undefined}
+                    rel={libro.url ? "noopener noreferrer" : undefined}
+                    class="group block"
+                >
+                    {libro.coverImage && (
+                        <div class="aspect-[2/3] rounded-lg overflow-hidden bg-gray-100 mb-3">
+                            <img
+                                src={urlFor(libro.coverImage).width(300).height(450).auto('format').url()}
+                                alt=""
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                loading="lazy"
+                            />
+                        </div>
+                    )}
+                    <h3 class="text-sm font-medium leading-snug group-hover:underline group-hover:decoration-dashed group-hover:underline-offset-4">
+                        {libro.title}
+                    </h3>
+                </a>
+            ))}
+        </div>
+    </section>
+
+    <section class="mt-16 sm:mt-24">
+        <div class="flex items-center justify-between mb-8">
+            <h2 class="font-serif text-xl italic sm:text-2xl">Artículos de prensa recientes</h2>
+            <a href="/prensa" class="text-sm hover:underline">Ver todos →</a>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {latestPrensa.map((item) => (
+                <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="group block"
+                >
+                    {item.coverImage && (
+                        <div class="rounded-lg overflow-hidden bg-gray-100 mb-3">
+                            <img
+                                src={urlFor(item.coverImage).width(400).auto('format').url()}
+                                alt=""
+                                class="w-full group-hover:scale-105 transition-transform duration-300"
+                                loading="lazy"
+                            />
+                        </div>
+                    )}
+                    <h3 class="text-sm font-medium leading-snug group-hover:underline group-hover:decoration-dashed group-hover:underline-offset-4">
+                        {item.title}
+                    </h3>
+                    {item.description && (
+                        <p class="mt-1 text-sm opacity-70">{item.description}</p>
+                    )}
+                </a>
+            ))}
+        </div>
+    </section>
+
+    <section class="mt-16 sm:mt-24">
         <div class="flex items-center justify-between mb-8">
             <h2 class="font-serif text-xl italic sm:text-2xl">Entrevistas recientes</h2>
             <a href="/entrevistas" class="text-sm hover:underline">Ver todas →</a>
@@ -71,27 +138,5 @@ const latestPrensa = prensa.slice(0, 3);
                 </a>
             ))}
         </div>
-    </section>
-
-    <section class="mt-16 sm:mt-24">
-        <div class="flex items-center justify-between mb-8">
-            <h2 class="font-serif text-xl italic sm:text-2xl">Artículos de prensa recientes</h2>
-            <a href="/prensa" class="text-sm hover:underline">Ver todos →</a>
-        </div>
-        <ul class="space-y-4">
-            {latestPrensa.map((item) => (
-                <li>
-                    <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="group block hover:underline hover:decoration-dashed hover:underline-offset-4"
-                    >
-                        <span class="font-medium">{item.title}</span>
-                        <span class="text-sm opacity-70 ml-2">({item.year})</span>
-                    </a>
-                </li>
-            ))}
-        </ul>
     </section>
 </BaseLayout>

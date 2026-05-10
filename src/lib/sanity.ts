@@ -127,7 +127,7 @@ export async function getInicio(): Promise<Inicio | null> {
 
 export async function getLibros(): Promise<Libro[]> {
   const results = await client.fetch(`
-    *[_type == "libro"] | order(year desc) {
+    *[_type == "libro"] | order(_createdAt desc) {
       _id,
       title,
       year,
@@ -192,7 +192,7 @@ export async function getCharlas(): Promise<Charla[]> {
 
 export async function getPrensa(): Promise<Prensa[]> {
   const results = await client.fetch(`
-    *[_type == "prensa"] | order(year desc) {
+    *[_type == "prensa"] | order(_createdAt desc) {
       _id,
       title,
       year,
