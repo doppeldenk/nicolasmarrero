@@ -4,7 +4,7 @@ const siteConfig: SiteConfig = {
     website: 'https://nicolasmarrero.vercel.app',
     title: 'Nicolás Marrero',
     subtitle: 'Sitio personal',
-    description: 'Sitio web personal de Nicolás Marrero',
+    description: 'Sociólogo uruguayo investigando el capitalismo de plataformas y la uberización del trabajo',
     image: {
         src: '/og-image.jpg',
         alt: 'Nicolás Marrero'
