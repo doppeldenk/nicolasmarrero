@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPodcasts, urlFor } from '../lib/sanity';
+
+const podcasts = await getPodcasts();
+---
+
+<BaseLayout title="Podcast" description="Episodios de podcast" showHeader={false}>
+    <h1 class="mb-12 font-serif text-2xl leading-tight italic sm:mb-16 sm:text-4xl">Podcast</h1>
+
+    {podcasts.length > 0 ? (
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {podcasts.map((episode) => (
+                <a
+                    href={episode.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="group block"
+                >
+                    {episode.coverImage && (
+                        <div class="aspect-square rounded-lg overflow-hidden bg-gray-100 mb-3">
+                            <img
+                                src={urlFor(episode.coverImage).width(400).height(400).auto('format').url()}
+                                alt=""
+                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                loading="lazy"
+                            />
+                        </div>
+                    )}
+                    <h3 class="font-medium leading-snug group-hover:underline group-hover:decoration-dashed group-hover:underline-offset-4">
+                        {episode.title}
+                    </h3>
+                    {episode.description && (
+                        <p class="mt-1 text-sm opacity-70 line-clamp-2">{episode.description}</p>
+                    )}
+                </a>
+            ))}
+        </div>
+    ) : (
+        <p class="text-center opacity-70">No hay episodios de podcast disponibles.</p>
+    )}
+</BaseLayout>

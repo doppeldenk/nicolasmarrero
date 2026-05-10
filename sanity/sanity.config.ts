@@ -31,6 +31,8 @@ const structure = (S: any) =>
       S.documentTypeListItem('charla').title('Charlas'),
       S.documentTypeListItem('prensa').title('Prensa'),
       S.divider(),
+      // Podcast collection
+      S.documentTypeListItem('podcast').title('Podcast'),
       // Blog collection
       S.documentTypeListItem('post').title('Blog'),
       S.divider(),

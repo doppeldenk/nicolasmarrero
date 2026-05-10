@@ -88,6 +88,14 @@ export interface Entrevista {
   coverImage?: SanityImageSource
 }
 
+export interface Podcast {
+  _id: string
+  title: string
+  description?: string
+  url: string
+  coverImage?: SanityImageSource
+}
+
 export interface Post {
   _id: string
   title: string
@@ -228,6 +236,18 @@ export async function getEntrevistas(): Promise<Entrevista[]> {
     ...item,
     videoId: extractYouTubeId(item.url),
   }))
+}
+
+export async function getPodcasts(): Promise<Podcast[]> {
+  return client.fetch(`
+    *[_type == "podcast"] | order(_createdAt desc) {
+      _id,
+      title,
+      description,
+      url,
+      coverImage
+    }
+  `)
 }
 
 export async function getPublicacionBySlug(slug: string): Promise<(Libro | Articulo | Conferencia | Charla) | null> {

@@ -39,6 +39,14 @@ const siteConfig: SiteConfig = {
             href: '/charlas'
         },
         {
+            text: 'Podcast',
+            href: '/podcast'
+        },
+        {
+            text: 'Blog',
+            href: '/blog'
+        },
+        {
             text: 'Contacto',
             href: '/contacto'
         }
